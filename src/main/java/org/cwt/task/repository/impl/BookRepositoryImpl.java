@@ -38,7 +38,9 @@ public class BookRepositoryImpl implements BookRepository {
     public void delete(Long bookId) {
         Book book = em.find(Book.class, bookId);
         if (book != null) {
+            em.getTransaction().begin();
             em.remove(book);
+            em.getTransaction().commit();
         }
     }
 }
