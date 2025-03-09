@@ -17,6 +17,7 @@ public class BookResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public List<Book> getAllBooks() {
+        List<Book> books = bookRepository.findAll();
         return bookRepository.findAll();
     }
 
@@ -32,6 +33,6 @@ public class BookResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public void deleteBook(@PathParam("id") Long id) {
-        bookRepository.delete(id);
+        bookRepository.deleteById(id);
     }
 }

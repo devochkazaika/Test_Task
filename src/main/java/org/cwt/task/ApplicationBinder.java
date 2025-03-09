@@ -1,6 +1,5 @@
 package org.cwt.task;
 
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import org.cwt.task.repository.BookRepository;
 import org.cwt.task.repository.impl.BookRepositoryImpl;
@@ -15,7 +14,8 @@ public class ApplicationBinder extends AbstractBinder {
     protected void configure() {
         bindFactory(EntityManagerFactoryProvider.class)
                 .to(EntityManager.class)
-                .in(ApplicationScoped.class);
+                .in(Singleton.class);
+
         bind(BookRepositoryImpl.class).to(BookRepository.class).in(Singleton.class);
     }
 }

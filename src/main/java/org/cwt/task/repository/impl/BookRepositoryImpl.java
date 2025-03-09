@@ -1,25 +1,17 @@
 package org.cwt.task.repository.impl;
 
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
 import org.cwt.task.entity.Book;
 import org.cwt.task.repository.BookRepository;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 
-@ApplicationScoped
+@Singleton
 public class BookRepositoryImpl implements BookRepository {
-
+    @Inject
     private EntityManager em;
-    private EntityManagerFactory entityManagerFactory;
-
-    public BookRepositoryImpl() {
-        entityManagerFactory = Persistence.createEntityManagerFactory("library");
-        em = entityManagerFactory.createEntityManager();
-
-    }
 
     @Override
     public Book save(Book book) {
@@ -31,11 +23,12 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public List<Book> findAll() {
-        return em.createQuery("SELECT b FROM Book b", Book.class).getResultList();
+        List<Book> books = em.createQuery("SELECT b FROM Book b", Book.class).getResultList();
+        return books;
     }
 
     @Override
-    public void delete(Long bookId) {
+    public void deleteById(Long bookId) {
         Book book = em.find(Book.class, bookId);
         if (book != null) {
             em.getTransaction().begin();
