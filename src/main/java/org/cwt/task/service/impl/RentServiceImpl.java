@@ -1,14 +1,31 @@
 package org.cwt.task.service.impl;
 
+import org.cwt.task.dto.BookRentDto;
 import org.cwt.task.entity.BookRent;
+import org.cwt.task.repository.BookRentRepository;
+import org.cwt.task.service.BookService;
 import org.cwt.task.service.RentService;
+import org.modelmapper.ModelMapper;
 
+import javax.inject.Inject;
 import java.util.List;
+import java.util.UUID;
 
 public class RentServiceImpl implements RentService {
-    @Override
-    public void takeRent(BookRent rent) {
+    @Inject
+    private BookRentRepository repository;
 
+    @Inject
+    private BookService bookService;
+
+    @Inject
+    private ModelMapper modelMapper;
+
+    @Override
+    public BookRent takeRent(BookRentDto rent, Long bookId, UUID userId) {
+        BookRent rentEntity = modelMapper.map(rent, BookRent.class);
+        rentEntity.setBook(bookService.getById(bookId));
+        return repository.save(rentEntity);
     }
 
     @Override

@@ -14,6 +14,12 @@ public class BookRepositoryImpl implements BookRepository {
     private EntityManager em;
 
     @Override
+    public Book findById(Long id) {
+        return em.createQuery("SELECT b from Book b where b.id = :id", Book.class)
+                .setParameter("id", id).getSingleResult();
+    }
+
+    @Override
     public Book save(Book book) {
         em.getTransaction().begin();
         em.persist(book);

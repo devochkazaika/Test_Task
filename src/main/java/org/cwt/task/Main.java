@@ -1,5 +1,6 @@
 package org.cwt.task;
 
+import org.cwt.task.utils.ApplicationBinder;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;

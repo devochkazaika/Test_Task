@@ -1,4 +1,4 @@
-package org.cwt.task;
+package org.cwt.task.utils;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
