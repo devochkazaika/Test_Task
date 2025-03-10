@@ -9,4 +9,6 @@ public interface BookRentRepository {
     BookRent save(BookRent bookRent);
 
     List<BookRent> getBookRentsByUserId(UUID userId);
+
+    List<BookRent> findAll();
 }

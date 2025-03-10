@@ -5,9 +5,9 @@ import org.cwt.task.entity.BookRent;
 import org.cwt.task.service.RentService;
 
 import javax.inject.Inject;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import java.util.List;
 import java.util.UUID;
 
 @Path("/rent")
@@ -21,4 +21,11 @@ public class RentResources {
                              @QueryParam("userId") UUID userId) {
         return rentService.takeRent(bookRent, bookId, userId);
     };
+
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<BookRent> bookRents(@QueryParam("bookId") Long bookId) {
+        return rentService.getRentList();
+    }
 }

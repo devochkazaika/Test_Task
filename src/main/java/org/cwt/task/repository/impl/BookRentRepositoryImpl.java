@@ -14,6 +14,10 @@ public class BookRentRepositoryImpl implements BookRentRepository {
     @Inject
     private EntityManager entityManager;
 
+    @Override
+    public List<BookRent> findAll() {
+        return entityManager.createQuery("from BookRent", BookRent.class).getResultList();
+    }
 
     @Override
     public BookRent save(BookRent bookRent) {
