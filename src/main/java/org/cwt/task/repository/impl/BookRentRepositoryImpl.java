@@ -4,7 +4,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
-import org.cwt.task.entity.BookRent;
+import org.cwt.task.model.entity.BookRent;
 import org.cwt.task.exception.NotFoundException;
 import org.cwt.task.repository.BookRentRepository;
 
@@ -40,7 +40,6 @@ public class BookRentRepositoryImpl implements BookRentRepository {
         entityManager.getTransaction().commit();
         return bookRent;
     }
-
 
     @Override
     public List<BookRent> findByUserId(UUID userId) {

@@ -1,6 +1,6 @@
 package org.cwt.task.service;
 
-import org.cwt.task.entity.User;
+import org.cwt.task.model.entity.User;
 
 import java.util.List;
 import java.util.UUID;
@@ -13,5 +13,6 @@ public interface UserService {
     List<User> getUsers();
 
     void deleteUser(UUID id);
+
 
 }

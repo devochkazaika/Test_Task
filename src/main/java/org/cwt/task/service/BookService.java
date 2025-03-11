@@ -1,6 +1,6 @@
 package org.cwt.task.service;
 
-import org.cwt.task.entity.Book;
+import org.cwt.task.model.entity.Book;
 
 import java.util.List;
 

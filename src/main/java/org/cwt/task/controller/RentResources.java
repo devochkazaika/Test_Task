@@ -4,7 +4,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import org.cwt.task.dto.BookRentDto;
-import org.cwt.task.entity.BookRent;
+import org.cwt.task.model.entity.BookRent;
 import org.cwt.task.service.RentService;
 import org.modelmapper.ModelMapper;
 

@@ -3,7 +3,7 @@ package org.cwt.task.repository.impl;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
-import org.cwt.task.entity.User;
+import org.cwt.task.model.entity.User;
 import org.cwt.task.exception.NotFoundException;
 import org.cwt.task.repository.UserRepository;
 

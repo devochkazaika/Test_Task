@@ -1,6 +1,6 @@
 package org.cwt.task.repository;
 
-import org.cwt.task.entity.BookRent;
+import org.cwt.task.model.entity.BookRent;
 
 import java.util.List;
 import java.util.UUID;

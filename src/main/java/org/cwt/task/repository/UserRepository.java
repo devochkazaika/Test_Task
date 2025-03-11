@@ -1,6 +1,6 @@
 package org.cwt.task.repository;
 
-import org.cwt.task.entity.User;
+import org.cwt.task.model.entity.User;
 
 import java.util.List;
 import java.util.UUID;

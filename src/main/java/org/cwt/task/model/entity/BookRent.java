@@ -1,4 +1,4 @@
-package org.cwt.task.entity;
+package org.cwt.task.model.entity;
 
 
 import jakarta.persistence.*;

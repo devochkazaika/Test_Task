@@ -4,7 +4,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import org.cwt.task.dto.UserDto;
-import org.cwt.task.entity.User;
+import org.cwt.task.model.entity.User;
 import org.cwt.task.service.UserService;
 import org.modelmapper.ModelMapper;
 

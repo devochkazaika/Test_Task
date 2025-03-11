@@ -1,7 +1,7 @@
 package org.cwt.task.utils;
 
 import org.cwt.task.dto.BookRentDto;
-import org.cwt.task.entity.BookRent;
+import org.cwt.task.model.entity.BookRent;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 

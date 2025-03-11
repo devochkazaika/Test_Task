@@ -4,7 +4,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
-import org.cwt.task.entity.Book;
+import org.cwt.task.model.entity.Book;
 import org.cwt.task.exception.NotFoundException;
 import org.cwt.task.repository.BookRepository;
 

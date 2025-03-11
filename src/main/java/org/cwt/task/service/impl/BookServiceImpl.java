@@ -1,7 +1,7 @@
 package org.cwt.task.service.impl;
 
 import jakarta.inject.Inject;
-import org.cwt.task.entity.Book;
+import org.cwt.task.model.entity.Book;
 import org.cwt.task.repository.BookRepository;
 import org.cwt.task.service.BookService;
 import org.modelmapper.ModelMapper;

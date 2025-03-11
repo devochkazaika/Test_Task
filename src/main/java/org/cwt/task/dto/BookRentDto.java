@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.cwt.task.entity.BookRent;
+import org.cwt.task.model.entity.BookRent;
 
 import java.time.LocalDateTime;
 

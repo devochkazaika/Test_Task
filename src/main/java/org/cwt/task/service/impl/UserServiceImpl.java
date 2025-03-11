@@ -1,7 +1,7 @@
 package org.cwt.task.service.impl;
 
 import jakarta.inject.Inject;
-import org.cwt.task.entity.User;
+import org.cwt.task.model.entity.User;
 import org.cwt.task.repository.UserRepository;
 import org.cwt.task.service.UserService;
 
