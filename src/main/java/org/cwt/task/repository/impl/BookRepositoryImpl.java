@@ -42,7 +42,7 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public void deleteById(Long bookId) {
-        Book book = em.find(Book.class, bookId);
+        Book book = findById(bookId);
         if (book != null) {
             em.getTransaction().begin();
             em.remove(book);

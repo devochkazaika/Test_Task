@@ -2,7 +2,9 @@ package org.cwt.task.repository.impl;
 
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import org.cwt.task.entity.User;
+import org.cwt.task.exception.NotFoundException;
 import org.cwt.task.repository.UserRepository;
 
 import java.util.List;
@@ -34,8 +36,13 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User findById(UUID id) {
-        return em.createQuery("select u from User u " +
-                        "where u.id = :id", User.class).setParameter("id", id)
-                .getSingleResult();
+        try {
+            return em.createQuery("select u from User u " +
+                            "where u.id = :id", User.class).setParameter("id", id)
+                    .getSingleResult();
+        }
+        catch (NoResultException ex){
+            throw new NotFoundException("Not found user with id: " + id);
+        }
     }
 }
