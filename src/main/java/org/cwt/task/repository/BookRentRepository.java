@@ -11,4 +11,6 @@ public interface BookRentRepository {
     List<BookRent> getBookRentsByUserId(UUID userId);
 
     List<BookRent> findAll();
+
+    BookRent findById(UUID id);
 }

@@ -22,10 +22,16 @@ public class RentResources {
         return rentService.takeRent(bookRent, bookId, userId);
     };
 
+    @PUT()
+    @Path("{id}")
+    public void backRent(@PathParam("id") UUID id) {
+        rentService.returnRent(id);
+    }
+
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public List<BookRent> bookRents(@QueryParam("bookId") Long bookId) {
+    public List<BookRentDto> bookRents(@QueryParam("bookId") Long bookId) {
         return rentService.getRentList();
     }
 }

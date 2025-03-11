@@ -25,6 +25,7 @@ public class Book {
 
     LocalDate publicationDate;
 
+    @Enumerated(EnumType.STRING)
     BookTheme bookTheme;
 
     public enum BookTheme {

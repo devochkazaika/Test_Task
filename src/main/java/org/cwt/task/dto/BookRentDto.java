@@ -14,4 +14,8 @@ public class BookRentDto {
     LocalDateTime rentDate;
 
     LocalDateTime returnDate;
+
+    String userName;
+
+    String bookName;
 }

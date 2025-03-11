@@ -15,6 +15,13 @@ public class BookRentRepositoryImpl implements BookRentRepository {
     private EntityManager entityManager;
 
     @Override
+    public BookRent findById(UUID id) {
+        return entityManager
+                .createQuery("Select r from BookRent r where r = :id", BookRent.class)
+                .setParameter("id", id).getSingleResult();
+    }
+
+    @Override
     public List<BookRent> findAll() {
         return entityManager.createQuery("from BookRent", BookRent.class).getResultList();
     }

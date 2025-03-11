@@ -1,6 +1,7 @@
 package org.cwt.task.utils;
 
 import jakarta.persistence.EntityManager;
+import org.cwt.task.BookMapper;
 import org.cwt.task.repository.BookRentRepository;
 import org.cwt.task.repository.BookRepository;
 import org.cwt.task.repository.UserRepository;
@@ -29,7 +30,7 @@ public class ApplicationBinder extends AbstractBinder {
 
 
         bind(RentServiceImpl.class).to(RentService.class).in(Singleton.class);
-        bind(ModelMapper.class).to(ModelMapper.class).in(Singleton.class);
+        bind(BookMapper.class).to(ModelMapper.class).in(Singleton.class);
         bind(BookRepositoryImpl.class).to(BookRepository.class).in(Singleton.class);
         bind(BookRentRepositoryImpl.class).to(BookRentRepository.class).in(Singleton.class);
         bind(BookServiceImpl.class).to(BookService.class).in(Singleton.class);

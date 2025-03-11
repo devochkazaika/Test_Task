@@ -9,7 +9,7 @@ import java.util.UUID;
 public interface RentService {
     BookRent takeRent(BookRentDto rent, Long bookId, UUID userId);
 
-    void returnRent(BookRent rent);
+    void returnRent(UUID id);
 
-    List<BookRent> getRentList();
+    List<BookRentDto> getRentList();
 }

@@ -4,6 +4,7 @@ import org.cwt.task.utils.ApplicationBinder;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.validation.ValidationFeature;
 
 import javax.ws.rs.ApplicationPath;
 import java.io.IOException;
@@ -19,7 +20,8 @@ public class Main extends ResourceConfig {
 
     public Main() {
         packages("org.cwt.task");
-        register(new ApplicationBinder()); // Добавляем поддержку CDI
+        register(ValidationFeature.class);
+        register(new ApplicationBinder()); // CDI
     }
 
     public static HttpServer startServer() {

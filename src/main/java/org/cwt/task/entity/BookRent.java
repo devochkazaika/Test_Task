@@ -1,10 +1,7 @@
 package org.cwt.task.entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,4 +29,12 @@ public class BookRent {
     @ManyToOne
     @JoinColumn(name = "book_id")
     Book book;
+
+    @Enumerated(EnumType.STRING)
+    RentStatus rentStatus;
+
+    public enum RentStatus {
+        OPENED,
+        CLOSED
+    }
 }
