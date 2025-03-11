@@ -20,7 +20,7 @@ public class BookRentRepositoryImpl implements BookRentRepository {
     public BookRent findById(UUID id) {
         try {
             return entityManager
-                    .createQuery("Select r from BookRent r where r = :id", BookRent.class)
+                    .createQuery("Select r from BookRent r where r.uuid = :id", BookRent.class)
                     .setParameter("id", id).getSingleResult();
         }
         catch (NoResultException ex){

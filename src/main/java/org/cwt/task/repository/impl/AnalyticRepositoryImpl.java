@@ -3,8 +3,12 @@ package org.cwt.task.repository.impl;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import org.cwt.task.model.UserAnalytic;
+import org.cwt.task.model.entity.BookRent;
+import org.cwt.task.model.entity.User;
 import org.cwt.task.repository.AnalyticRepository;
+import org.cwt.task.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,8 +19,11 @@ public class AnalyticRepositoryImpl implements AnalyticRepository {
     @Inject
     private EntityManager em;
 
+    @Inject
+    private UserRepository userRepository;
+
     private List<String> getBooksByStatus(UUID userId,
-                                         String status, 
+                                         BookRent.RentStatus status,
                                          LocalDateTime startTime, 
                                          LocalDateTime endTime) {
         StringBuilder stringBuilder = new StringBuilder();
@@ -25,50 +32,67 @@ public class AnalyticRepositoryImpl implements AnalyticRepository {
                 "WHERE r.user.id = :userId AND r.rentStatus = :status";
         stringBuilder.append(query);
         if (startTime != null) {
-            stringBuilder.append(" AND (r.startTime > :startTime)");
+            stringBuilder.append(" AND (r.rentDate >= :startTime)");
         }
         if (endTime != null) {
-            stringBuilder.append(" AND (r.endTime < :endTime)");
+            stringBuilder.append(" AND (r.returnDate <= :endTime)");
         }
 
         return em.createQuery(stringBuilder.toString(), String.class)
                 .setParameter("userId", userId)
                 .setParameter("status", status)
+                .setParameter("startTime", startTime)
+                .setParameter("endTime", endTime)
                 .getResultList();
     }
 
     @Override
     public UserAnalytic getUserAnalytic(UUID userId, LocalDateTime startTime, LocalDateTime endTime) {
         StringBuilder stringBuilder = new StringBuilder();
-        String query = "SELECT u.firstName, u.lastName, " +
+        String query = "SELECT " +
                 "COUNT(r), " +
-                "SUM(CASE WHEN r.rentStatus = 'OPEN' THEN 1 ELSE 0 END), " +
+                "SUM(CASE WHEN r.rentStatus = 'OPENED' THEN 1 ELSE 0 END), " +
                 "SUM(CASE WHEN r.rentStatus = 'CLOSED' THEN 1 ELSE 0 END) " +
                 "FROM User u " +
                 "LEFT JOIN BookRent r ON u.id = r.user.id " +
                 "WHERE u.id = :userId";
         stringBuilder.append(query);
         if (startTime != null) {
-            stringBuilder.append(" AND (r.startTime > :startTime)");
+            stringBuilder.append(" AND (r.rentDate >= :startTime)");
         }
         if (endTime != null) {
-            stringBuilder.append(" AND (r.endTime < :endTime)");
+            stringBuilder.append(" AND (r.returnDate <= :endTime)");
         }
         stringBuilder.append(" GROUP BY u.id");
 
-        Object[] result = (Object[]) em.createQuery(stringBuilder.toString())
-                .setParameter("userId", userId)
-                .getSingleResult();
-
-        return UserAnalytic.builder()
-                .firstName((String) result[0])
-                .lastName((String) result[1])
-                .countRent(((Number) result[2]).intValue()) // ✅ Приведение типов
-                .countOpenRent(((Number) result[3]).intValue())
-                .countCloseRent(((Number) result[4]).intValue())
-                .openBook(getBooksByStatus(userId, "OPEN", startTime, endTime))
-                .closeBook(getBooksByStatus(userId, "CLOSED", startTime, endTime))
-                .build();
+        User user = userRepository.findById(userId);
+        try {
+            Object[] result = (Object[]) em.createQuery(stringBuilder.toString())
+                    .setParameter("userId", userId)
+                    .setParameter("startTime", startTime)
+                    .setParameter("endTime", endTime)
+                    .getSingleResult();
+            return UserAnalytic.builder()
+                    .firstName(user.getFirstName())
+                    .lastName(user.getLastName())
+                    .countRent(((Number) result[0]).intValue()) // ✅ Приведение типов
+                    .countOpenRent(((Number) result[1]).intValue())
+                    .countCloseRent(((Number) result[2]).intValue())
+                    .openBook(getBooksByStatus(userId, BookRent.RentStatus.OPENED, startTime, endTime))
+                    .closeBook(getBooksByStatus(userId, BookRent.RentStatus.CLOSED, startTime, endTime))
+                    .build();
+        }
+        catch (NoResultException e){
+            return UserAnalytic.builder()
+                    .firstName(user.getFirstName())
+                    .lastName(user.getLastName())
+                    .countRent(0) // ✅ Приведение типов
+                    .countOpenRent(0)
+                    .countCloseRent(0)
+                    .openBook(getBooksByStatus(userId, BookRent.RentStatus.OPENED, startTime, endTime))
+                    .closeBook(getBooksByStatus(userId, BookRent.RentStatus.CLOSED, startTime, endTime))
+                    .build();
+        }
     }
 
 

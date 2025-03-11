@@ -11,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 import org.cwt.task.model.entity.BookRent;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookRentDto {
+    UUID uuid;
 
     @NotNull(message = "Дата аренды не может быть пустой")
     @PastOrPresent(message = "Дата аренды не может быть в будущем")
