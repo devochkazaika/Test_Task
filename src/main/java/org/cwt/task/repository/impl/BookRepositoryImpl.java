@@ -3,7 +3,9 @@ package org.cwt.task.repository.impl;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import org.cwt.task.entity.Book;
+import org.cwt.task.exception.NotFoundException;
 import org.cwt.task.repository.BookRepository;
 
 import java.util.List;
@@ -15,8 +17,13 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public Book findById(Long id) {
-        return em.createQuery("SELECT b from Book b where b.id = :id", Book.class)
-                .setParameter("id", id).getSingleResult();
+        try {
+            return em.createQuery("SELECT b from Book b where b.id = :id", Book.class)
+                    .setParameter("id", id).getSingleResult();
+        }
+        catch (NoResultException e){
+            throw new NotFoundException("Book not found with id = " + id);
+        }
     }
 
     @Override
