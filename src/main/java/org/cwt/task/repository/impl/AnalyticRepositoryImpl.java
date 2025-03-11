@@ -75,7 +75,7 @@ public class AnalyticRepositoryImpl implements AnalyticRepository {
             return UserAnalytic.builder()
                     .firstName(user.getFirstName())
                     .lastName(user.getLastName())
-                    .countRent(((Number) result[0]).intValue()) // ✅ Приведение типов
+                    .countRent(((Number) result[0]).intValue())
                     .countOpenRent(((Number) result[1]).intValue())
                     .countCloseRent(((Number) result[2]).intValue())
                     .openBook(getBooksByStatus(userId, BookRent.RentStatus.OPENED, startTime, endTime))
@@ -86,7 +86,7 @@ public class AnalyticRepositoryImpl implements AnalyticRepository {
             return UserAnalytic.builder()
                     .firstName(user.getFirstName())
                     .lastName(user.getLastName())
-                    .countRent(0) // ✅ Приведение типов
+                    .countRent(0)
                     .countOpenRent(0)
                     .countCloseRent(0)
                     .openBook(getBooksByStatus(userId, BookRent.RentStatus.OPENED, startTime, endTime))
