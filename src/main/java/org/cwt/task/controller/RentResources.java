@@ -31,15 +31,15 @@ public class RentResources {
     }
 
     @POST
-    public BookRent bookRent(BookRentDto bookRent,
+    public BookRent createRent(BookRentDto bookRent,
                              @QueryParam("bookId") Long bookId,
                              @QueryParam("userId") UUID userId) {
         return rentService.takeRent(bookRent, bookId, userId);
     };
 
-    @PUT()
+    @PUT
     @Path("{id}")
-    public void backRent(@PathParam("id") UUID id) {
+    public void finalRent(@PathParam("id") UUID id) {
         rentService.returnRent(id);
     }
 
