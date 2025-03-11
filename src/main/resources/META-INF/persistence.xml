@@ -19,6 +19,11 @@
             <property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.use_sql_comments" value="true"/>
 
+            <!--Пулл соединений Hikari-->
+            <property name="hibernate.hikari.minimumIdle" value="5" />
+            <property name="hibernate.hikari.maximumPoolSize" value="10" />
+            <property name="hibernate.hikari.idleTimeout" value="30000" />
+            <property name="hibernate.connection.provider_class" value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider" />
         </properties>
     </persistence-unit>
 

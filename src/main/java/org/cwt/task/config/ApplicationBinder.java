@@ -1,9 +1,9 @@
-package org.cwt.task.utils;
+package org.cwt.task.config;
 
 import jakarta.inject.Singleton;
 import jakarta.persistence.EntityManager;
 import jakarta.ws.rs.ext.Provider;
-import org.cwt.task.BookMapper;
+import org.cwt.task.utils.BookMapper;
 import org.cwt.task.repository.BookRentRepository;
 import org.cwt.task.repository.BookRepository;
 import org.cwt.task.repository.UserRepository;
@@ -16,6 +16,7 @@ import org.cwt.task.service.UserService;
 import org.cwt.task.service.impl.BookServiceImpl;
 import org.cwt.task.service.impl.RentServiceImpl;
 import org.cwt.task.service.impl.UserServiceImpl;
+import org.cwt.task.utils.EntityManagerFactoryProvider;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.modelmapper.ModelMapper;
 

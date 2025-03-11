@@ -2,7 +2,7 @@ package org.cwt.task;
 
 
 import jakarta.ws.rs.ApplicationPath;
-import org.cwt.task.utils.ApplicationBinder;
+import org.cwt.task.config.ApplicationBinder;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -38,6 +38,6 @@ public class Main extends ResourceConfig {
         final Server server = startServer();
         server.start();
         System.out.println("Jersey app started at " + BASE_URI);
-        server.join(); // Ждем, пока сервер работает
+        server.join();
     }
 }

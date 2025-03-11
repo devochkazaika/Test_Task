@@ -1,4 +1,4 @@
-package org.cwt.task;
+package org.cwt.task.utils;
 
 import org.cwt.task.dto.BookRentDto;
 import org.cwt.task.entity.BookRent;
