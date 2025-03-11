@@ -1,9 +1,23 @@
-FROM openjdk:11-jre-slim
+# Используем Maven с JDK для сборки и запуска
+FROM maven:3.8.6-openjdk-11-slim AS builder
 
 WORKDIR /app
 
-COPY ./build/*.jar /app/app.jar
+COPY ./pom.xml /app/
+COPY ./src /app/src/
 
-EXPOSE 8080
+# Собираем проект
+RUN mvn clean install
 
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+# Используем тот же образ для запуска приложения
+FROM maven:3.8.6-openjdk-11-slim
+
+COPY . .
+
+ENV DATABASE_URL=${DATABASE_URL}
+ENV DATABASE_USER=${DATABASE_USER}
+ENV DATABASE_PASSWORD=${DATABASE_PASSWORD}
+
+RUN mvn clean install
+# Выполняем команду mvn exec:java для запуска Main
+ENTRYPOINT ["mvn", "exec:java", "-Dexec.mainClass=org.cwt.task.Main"]

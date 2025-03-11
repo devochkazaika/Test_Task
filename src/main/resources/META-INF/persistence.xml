@@ -9,9 +9,9 @@
 
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/library"/>
-            <property name="jakarta.persistence.jdbc.user" value="user"/>
-            <property name="jakarta.persistence.jdbc.password" value="password"/>
+<!--            <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/library"/>-->
+<!--            <property name="jakarta.persistence.jdbc.user" value="user"/>-->
+<!--            <property name="jakarta.persistence.jdbc.password" value="password"/>-->
 
             <property name="jakarta.persistence.schema-generation.database.action" value="update"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>

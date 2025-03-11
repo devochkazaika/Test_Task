@@ -1,6 +1,7 @@
 services:
 
   postgres:
+    container_name: postgresLibrary
     image: postgres:13.3
     environment:
       POSTGRES_DB: "library"
@@ -15,7 +16,7 @@ services:
     build:
       dockerfile: ./Dockerfile
     environment:
-      DATABASE_URL: jdbc:postgresql://postgres:5432/library
+      DATABASE_URL: jdbc:postgresql://postgresLibrary:5432/library
       DATABASE_USER: user
       DATABASE_PASSWORD: password
     ports:
