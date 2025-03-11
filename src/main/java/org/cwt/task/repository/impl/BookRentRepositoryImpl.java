@@ -4,8 +4,8 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
-import org.cwt.task.model.entity.BookRent;
 import org.cwt.task.exception.NotFoundException;
+import org.cwt.task.model.entity.BookRent;
 import org.cwt.task.repository.BookRentRepository;
 
 import java.util.List;
@@ -13,8 +13,12 @@ import java.util.UUID;
 
 @Singleton
 public class BookRentRepositoryImpl implements BookRentRepository {
-    @Inject
     private EntityManager entityManager;
+
+    @Inject
+    public BookRentRepositoryImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
     @Override
     public BookRent findById(UUID id) {
