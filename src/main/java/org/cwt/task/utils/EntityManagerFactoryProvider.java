@@ -13,6 +13,11 @@ public class EntityManagerFactoryProvider implements Factory<EntityManager> {
     private final EntityManagerFactory emf;
 
     public EntityManagerFactoryProvider() {
+//        Map<String, String> properties = new HashMap<>();
+//        properties.put("jakarta.persistence.jdbc.url", "jdbc:postgresql://localhost:5432/library");
+//        properties.put("jakarta.persistence.jdbc.user", "user");
+//        properties.put("jakarta.persistence.jdbc.password", "password");
+
         this.emf = Persistence.createEntityManagerFactory("library");
     }
 

@@ -61,18 +61,20 @@ public class BookRentRepositoryImplIntegrationTest {
     @Test
     public void testFindAll() {
         // Получаем все записи из базы
-        List<BookRent> result = em.createQuery("SELECT r FROM BookRent r", BookRent.class).getResultList();
+        List<BookRent> result = repository.findAll();
 
         // Проверяем, что результат не пустой
         assertNotNull(result);
         assertFalse(result.isEmpty());
+        assertEquals(bookRentId, result.get(0).getUuid());
     }
 
     @Test
     public void testSave() {
         // Сохраняем новый объект BookRent
         BookRent newBookRent = new BookRent();
-        newBookRent.setUuid(UUID.randomUUID());
+        UUID rentId = UUID.randomUUID();
+        newBookRent.setUuid(rentId);
         newBookRent.setRentDate(java.time.LocalDateTime.now());
         newBookRent.setReturnDate(java.time.LocalDateTime.now().plusDays(7));
 
@@ -80,13 +82,14 @@ public class BookRentRepositoryImplIntegrationTest {
         newUser.setId(UUID.randomUUID());
         newBookRent.setUser(newUser);
 
-        em.getTransaction().begin();
-        em.persist(newUser);
-        em.persist(newBookRent);
-        em.getTransaction().commit();
+        repository.save(newBookRent);
+        BookRent bookRent = repository.findById(rentId);
 
-        // Проверка, что объект был сохранен
-        assertNotNull(newBookRent.getUuid());
+        assertNotNull(bookRent.getUuid());
+        assertEquals(rentId, bookRent.getUuid());
+        assertEquals(newBookRent.getRentDate(), bookRent.getRentDate());
+        assertEquals(newBookRent.getReturnDate(), bookRent.getReturnDate());
+        assertEquals(newBookRent.getRentStatus(), bookRent.getRentStatus());
     }
 
     @Test
