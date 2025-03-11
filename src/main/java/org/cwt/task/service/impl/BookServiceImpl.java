@@ -3,6 +3,7 @@ package org.cwt.task.service.impl;
 import org.cwt.task.entity.Book;
 import org.cwt.task.repository.BookRepository;
 import org.cwt.task.service.BookService;
+import org.modelmapper.ModelMapper;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -10,6 +11,9 @@ import java.util.List;
 public class BookServiceImpl implements BookService {
     @Inject
     private BookRepository bookRepository;
+
+    @Inject
+    private ModelMapper bookMapper;
 
     @Override
     public List<Book> getAll() {
@@ -27,8 +31,10 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book update(Book book) {
-        return bookRepository.save(book);
+    public Book update(Long id, Book book) {
+        Book bookEntity = bookRepository.findById(id);
+        bookMapper.map(book, bookEntity);
+        return bookRepository.save(bookEntity);
     }
 
     @Override

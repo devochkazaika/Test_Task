@@ -8,6 +8,7 @@ import org.modelmapper.PropertyMap;
 public class BookMapper extends ModelMapper {
     public BookMapper() {
         super();
+        this.getConfiguration().setSkipNullEnabled(true);
         this.addMappings(new PropertyMap<BookRent, BookRentDto>() {
             @Override
             protected void configure() {

@@ -47,6 +47,6 @@ public class BookResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Book updateBook(@PathParam("id") Long id, BookDto book) {
-        return bookService.update(modelMapper.map(book, Book.class));
+        return bookService.update(id, modelMapper.map(book, Book.class));
     }
 }
