@@ -45,4 +45,13 @@ public class UserRepositoryImpl implements UserRepository {
             throw new NotFoundException("Not found user with id: " + id);
         }
     }
+
+    @Override
+    public void deleteById(UUID id) {
+        em.getTransaction().begin();
+        em.remove(findById(id));
+        em.getTransaction().commit();
+    }
+
+
 }

@@ -14,7 +14,8 @@ public class BookMapper extends ModelMapper {
             protected void configure() {
                 map(source.getRentDate(), destination.getRentDate());
                 map(source.getReturnDate(), destination.getReturnDate());
-                map(source.getUser().getFirstName(), destination.getUserName());
+                map(source.getUser().getFirstName(), destination.getFirstName());
+                map(source.getUser().getLastName(), destination.getLastName());
                 map(source.getBook().getName(), destination.getBookName());
             }
         });

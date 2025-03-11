@@ -11,5 +11,7 @@ public interface RentService {
 
     void returnRent(UUID id);
 
-    List<BookRentDto> getRentList();
+    List<BookRent> getRentList();
+
+    List<BookRent> getRentList(UUID userId);
 }

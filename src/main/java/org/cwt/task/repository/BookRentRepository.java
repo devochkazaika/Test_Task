@@ -8,9 +8,9 @@ import java.util.UUID;
 public interface BookRentRepository {
     BookRent save(BookRent bookRent);
 
-    List<BookRent> getBookRentsByUserId(UUID userId);
-
     List<BookRent> findAll();
 
     BookRent findById(UUID id);
+
+    List<BookRent> findByUserId(UUID userId);
 }

@@ -41,8 +41,16 @@ public class BookRentRepositoryImpl implements BookRentRepository {
         return bookRent;
     }
 
+
     @Override
-    public List<BookRent> getBookRentsByUserId(UUID userId) {
-        return null;
+    public List<BookRent> findByUserId(UUID userId) {
+        try {
+            return entityManager
+                    .createQuery("Select r from BookRent r where r.user.id = :userId", BookRent.class)
+                    .setParameter("userId", userId).getResultList();
+        }
+        catch (NoResultException ex){
+            throw new NotFoundException("Book not found with user id = " + userId);
+        }
     }
 }

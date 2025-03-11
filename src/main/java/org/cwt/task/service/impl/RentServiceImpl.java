@@ -11,7 +11,6 @@ import org.cwt.task.service.UserService;
 import org.modelmapper.ModelMapper;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,12 +49,12 @@ public class RentServiceImpl implements RentService {
     }
 
     @Override
-    public List<BookRentDto> getRentList() {
-        List<BookRentDto> listBook = new ArrayList<>();
-        for (BookRent rentEntity : repository.findAll()) {
-            BookRentDto dto = modelMapper.map(rentEntity, BookRentDto.class);
-            listBook.add(dto);
-        }
-        return listBook;
+    public List<BookRent> getRentList() {
+        return repository.findAll();
+    }
+
+    @Override
+    public List<BookRent> getRentList(UUID userId) {
+        return repository.findByUserId(userId);
     }
 }

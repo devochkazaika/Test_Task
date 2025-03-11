@@ -23,7 +23,7 @@ public class RentResources {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public List<BookRentDto> getRents(@QueryParam("bookId") Long bookId) {
+    public List<BookRentDto> getAllRents() {
         return rentService.getRentList()
                 .stream()
                 .map(x -> modelMapper.map(x, BookRentDto.class))
@@ -44,10 +44,12 @@ public class RentResources {
     }
 
     @GET
-    @Path("user/{id}")
+    @Path("user")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public List<BookRentDto> userRents(@PathParam("id") UUID id) {
-        return rentService.getRentList();
+    public List<BookRentDto> userRents(@QueryParam("userId") UUID id) {
+        return rentService.getRentList(id).stream().map(
+                x -> modelMapper.map(x, BookRentDto.class))
+                .collect(Collectors.toList());
     }
 }
