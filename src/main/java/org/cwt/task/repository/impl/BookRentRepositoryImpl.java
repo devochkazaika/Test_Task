@@ -1,11 +1,11 @@
 package org.cwt.task.repository.impl;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import jakarta.persistence.EntityManager;
 import org.cwt.task.entity.BookRent;
 import org.cwt.task.repository.BookRentRepository;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.List;
 import java.util.UUID;
 

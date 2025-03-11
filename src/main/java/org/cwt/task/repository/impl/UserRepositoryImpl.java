@@ -1,10 +1,10 @@
 package org.cwt.task.repository.impl;
 
+import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import org.cwt.task.entity.User;
 import org.cwt.task.repository.UserRepository;
 
-import javax.inject.Inject;
 import java.util.List;
 import java.util.UUID;
 

@@ -1,11 +1,11 @@
 package org.cwt.task.controller;
 
+import jakarta.inject.Inject;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import org.cwt.task.entity.User;
 import org.cwt.task.service.UserService;
 
-import javax.inject.Inject;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import java.util.List;
 import java.util.UUID;
 

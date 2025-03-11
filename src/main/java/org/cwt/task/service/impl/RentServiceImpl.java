@@ -1,5 +1,6 @@
 package org.cwt.task.service.impl;
 
+import jakarta.inject.Inject;
 import org.cwt.task.dto.BookRentDto;
 import org.cwt.task.entity.BookRent;
 import org.cwt.task.entity.User;
@@ -9,7 +10,6 @@ import org.cwt.task.service.RentService;
 import org.cwt.task.service.UserService;
 import org.modelmapper.ModelMapper;
 
-import javax.inject.Inject;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

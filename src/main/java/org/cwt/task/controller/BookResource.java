@@ -1,14 +1,14 @@
 package org.cwt.task.controller;
 
+import jakarta.inject.Inject;
+import jakarta.validation.Valid;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import org.cwt.task.dto.BookDto;
 import org.cwt.task.entity.Book;
 import org.cwt.task.service.BookService;
 import org.modelmapper.ModelMapper;
 
-import javax.inject.Inject;
-import javax.validation.Valid;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 @Path("/book")

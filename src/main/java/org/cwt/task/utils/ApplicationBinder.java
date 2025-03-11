@@ -1,6 +1,8 @@
 package org.cwt.task.utils;
 
+import jakarta.inject.Singleton;
 import jakarta.persistence.EntityManager;
+import jakarta.ws.rs.ext.Provider;
 import org.cwt.task.BookMapper;
 import org.cwt.task.repository.BookRentRepository;
 import org.cwt.task.repository.BookRepository;
@@ -17,8 +19,6 @@ import org.cwt.task.service.impl.UserServiceImpl;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.modelmapper.ModelMapper;
 
-import javax.inject.Singleton;
-import javax.ws.rs.ext.Provider;
 
 @Provider
 public class ApplicationBinder extends AbstractBinder {
