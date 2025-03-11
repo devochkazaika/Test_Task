@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class AnalyticServiceImpl implements AnalyticService {
-
     @Inject
     private AnalyticRepository analyticRepository;
 

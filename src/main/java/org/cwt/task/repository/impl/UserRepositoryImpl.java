@@ -1,6 +1,7 @@
 package org.cwt.task.repository.impl;
 
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import org.cwt.task.model.entity.User;
@@ -10,6 +11,7 @@ import org.cwt.task.repository.UserRepository;
 import java.util.List;
 import java.util.UUID;
 
+@Singleton
 public class UserRepositoryImpl implements UserRepository {
     @Inject
     private EntityManager em;

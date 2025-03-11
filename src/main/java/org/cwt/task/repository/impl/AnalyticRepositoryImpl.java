@@ -1,21 +1,21 @@
 package org.cwt.task.repository.impl;
 
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import jakarta.persistence.EntityManager;
 import org.cwt.task.model.UserAnalytic;
 import org.cwt.task.repository.AnalyticRepository;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
+@Singleton
 public class AnalyticRepositoryImpl implements AnalyticRepository {
     @Inject
     private EntityManager em;
 
-    private Set<String> getBooksByStatus(UUID userId, 
+    private List<String> getBooksByStatus(UUID userId,
                                          String status, 
                                          LocalDateTime startTime, 
                                          LocalDateTime endTime) {
@@ -30,12 +30,11 @@ public class AnalyticRepositoryImpl implements AnalyticRepository {
         if (endTime != null) {
             stringBuilder.append(" AND (r.endTime < :endTime)");
         }
-        List<String> books = em.createQuery(stringBuilder.toString(), String.class)
+
+        return em.createQuery(stringBuilder.toString(), String.class)
                 .setParameter("userId", userId)
                 .setParameter("status", status)
                 .getResultList();
-
-        return new HashSet<>(books);
     }
 
     @Override
@@ -64,13 +63,14 @@ public class AnalyticRepositoryImpl implements AnalyticRepository {
         return UserAnalytic.builder()
                 .firstName((String) result[0])
                 .lastName((String) result[1])
-                .countRent((Integer) result[2])
-                .countOpenRent((Integer) result[3])
-                .countCloseRent((Integer) result[4])
+                .countRent(((Number) result[2]).intValue()) // ✅ Приведение типов
+                .countOpenRent(((Number) result[3]).intValue())
+                .countCloseRent(((Number) result[4]).intValue())
                 .openBook(getBooksByStatus(userId, "OPEN", startTime, endTime))
                 .closeBook(getBooksByStatus(userId, "CLOSED", startTime, endTime))
                 .build();
     }
+
 
     @Override
     public UserAnalytic getUserAnalytic(UUID userId, LocalDateTime startTime) {

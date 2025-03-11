@@ -11,9 +11,11 @@ import org.cwt.task.repository.impl.AnalyticRepositoryImpl;
 import org.cwt.task.repository.impl.BookRentRepositoryImpl;
 import org.cwt.task.repository.impl.BookRepositoryImpl;
 import org.cwt.task.repository.impl.UserRepositoryImpl;
+import org.cwt.task.service.AnalyticService;
 import org.cwt.task.service.BookService;
 import org.cwt.task.service.RentService;
 import org.cwt.task.service.UserService;
+import org.cwt.task.service.impl.AnalyticServiceImpl;
 import org.cwt.task.service.impl.BookServiceImpl;
 import org.cwt.task.service.impl.RentServiceImpl;
 import org.cwt.task.service.impl.UserServiceImpl;
@@ -43,6 +45,7 @@ public class ApplicationBinder extends AbstractBinder {
         bind(RentServiceImpl.class).to(RentService.class).in(Singleton.class);
         bind(BookServiceImpl.class).to(BookService.class).in(Singleton.class);
         bind(UserServiceImpl.class).to(UserService.class).in(Singleton.class);
+        bind(AnalyticServiceImpl.class).to(AnalyticService.class).in(Singleton.class);
 
         // Utils
         bind(BookMapper.class).to(ModelMapper.class).in(Singleton.class);

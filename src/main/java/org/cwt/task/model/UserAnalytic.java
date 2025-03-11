@@ -2,7 +2,7 @@ package org.cwt.task.model;
 
 import lombok.*;
 
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,7 +17,7 @@ public class UserAnalytic {
     Integer countOpenRent;
     Integer countCloseRent;
 
-    Set<String> openBook;
-    Set<String> closeBook;
+    List<String> openBook;
+    List<String> closeBook;
 
 }
