@@ -26,6 +26,14 @@ public class BookResource {
         return bookService.getAll();
     }
 
+    @GET
+    @Path("{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Book getBook(@PathParam("id") Long id) {
+        return bookService.getById(id);
+    }
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

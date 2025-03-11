@@ -34,4 +34,12 @@ public class RentResources {
     public List<BookRentDto> bookRents(@QueryParam("bookId") Long bookId) {
         return rentService.getRentList();
     }
+
+    @GET
+    @Path("user/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<BookRentDto> userRents(@PathParam("id") UUID id) {
+        return rentService.getRentList();
+    }
 }
