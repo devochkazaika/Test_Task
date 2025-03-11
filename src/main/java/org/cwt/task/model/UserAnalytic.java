@@ -1,16 +1,14 @@
 package org.cwt.task.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class UserAnalytic {
     String firstName;
     String lastName;
@@ -19,7 +17,7 @@ public class UserAnalytic {
     Integer countOpenRent;
     Integer countCloseRent;
 
-    List<String> openBook;
-    List<String> closeBook;
+    Set<String> openBook;
+    Set<String> closeBook;
 
 }
