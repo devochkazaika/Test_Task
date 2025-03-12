@@ -21,11 +21,11 @@ public class AnalyticResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public UserAnalytic getUserAnalytic(@PathParam("id") UUID id,
-                                        @QueryParam("rentDate") String rentDateStr,
-                                        @QueryParam("returnDate") String returnDateStr
+                                        @QueryParam("startTime") String startTime,
+                                        @QueryParam("endTime") String endTime
                                         ) {
-        LocalDateTime rentDate = parseDate(rentDateStr);
-        LocalDateTime returnDate = parseDate(returnDateStr);
+        LocalDateTime rentDate = parseDate(startTime);
+        LocalDateTime returnDate = parseDate(endTime);
 
         return analyticService.userAnalytics(id, rentDate, returnDate);
     }

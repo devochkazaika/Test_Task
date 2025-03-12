@@ -27,65 +27,54 @@ public class AnalyticRepositoryImpl implements AnalyticRepository {
 
     public List<String> getBooksByStatus(UUID userId, BookRent.RentStatus status, LocalDateTime startTime, LocalDateTime endTime) {
         StringBuilder queryBuilder = new StringBuilder("SELECT DISTINCT b.name FROM BookRent r " +
-                "JOIN r.book b WHERE r.user.id = :userId AND r.rentStatus = :status");
+                "JOIN r.book b WHERE r.user.id = :userId");
 
-        if (startTime != null && status.equals(BookRent.RentStatus.OPENED)) {
+        if (status.equals(BookRent.RentStatus.OPENED)) {
             queryBuilder.append(" AND r.rentDate >= :startTime");
+            queryBuilder.append(" AND (r.rentDate <= :endTime) AND (r.returnDate IS NULL OR r.returnDate > :endTime)");
         }
-        if (endTime != null && status.equals(BookRent.RentStatus.CLOSED)) {
-            queryBuilder.append(" AND r.returnDate <= :endTime");
+
+        if (status.equals(BookRent.RentStatus.CLOSED)) {
+            queryBuilder.append(" AND r.returnDate >= :startTime");
+            queryBuilder.append(" AND (r.returnDate <= :endTime) ");
         }
+
+        LocalDateTime safeEndTime = (endTime != null) ? endTime : LocalDateTime.of(3000, 12, 31, 23, 59, 59);
 
         Query query = em.createQuery(queryBuilder.toString(), String.class)
                 .setParameter("userId", userId)
-                .setParameter("status", status);
-
-        if (startTime != null && status.equals(BookRent.RentStatus.OPENED)) {
-            query.setParameter("startTime", startTime);
-        }
-        if (endTime != null && status.equals(BookRent.RentStatus.CLOSED)) {
-            query.setParameter("endTime", endTime);
-        }
-
+                .setParameter("startTime", startTime)
+                .setParameter("endTime", safeEndTime);
         return query.getResultList();
     }
+
 
     @Override
     public UserAnalytic getUserAnalytic(UUID userId, LocalDateTime startTime, LocalDateTime endTime) {
         StringBuilder queryBuilder = new StringBuilder("SELECT " +
                 "COUNT(r), " +
-                "SUM(CASE WHEN r.rentStatus = 'OPENED' THEN 1 ELSE 0 END), " +
-                "SUM(CASE WHEN r.rentStatus = 'CLOSED' THEN 1 ELSE 0 END) " +
+                "SUM(CASE WHEN r.rentDate >= :startTime AND (r.returnDate IS NULL OR r.returnDate > :endTime) THEN 1 ELSE 0 END), " +
+                "SUM(CASE WHEN r.returnDate >= :startTime AND r.returnDate <= :endTime THEN 1 ELSE 0 END) " +
                 "FROM User u " +
                 "LEFT JOIN BookRent r ON u.id = r.user.id " +
                 "WHERE u.id = :userId");
-
-        if (startTime != null) {
-            queryBuilder.append(" AND r.rentDate >= :startTime");
-        }
-        if (endTime != null) {
-            queryBuilder.append(" AND r.returnDate <= :endTime");
-        }
 
         queryBuilder.append(" GROUP BY u.id");
 
         User user = userRepository.findById(userId);
 
         Query query = em.createQuery(queryBuilder.toString())
-                .setParameter("userId", userId);
-
-        if (startTime != null) {
-            query.setParameter("startTime", startTime);
-        }
-        if (endTime != null) {
-            query.setParameter("endTime", endTime);
-        }
+                .setParameter("userId", userId)
+                .setParameter("startTime", startTime)
+                .setParameter("endTime", endTime != null ?
+                        endTime : LocalDateTime.of(3000, 12, 31, 23, 59, 59)); // если endTime = null, ставим LocalDateTime.MAX
 
         List<Object[]> resultList = query.getResultList();
         Object[] result = resultList.isEmpty() ? null : resultList.get(0);
 
         return buildUserAnalytic(user, result, userId, startTime, endTime);
     }
+
 
     private UserAnalytic buildUserAnalytic(User user, Object[] result, UUID userId, LocalDateTime startTime, LocalDateTime endTime) {
         int countRent = (result != null && result[0] != null) ? ((Number) result[0]).intValue() : 0;

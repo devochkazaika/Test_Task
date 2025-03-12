@@ -57,6 +57,7 @@ public class BookRentRepositoryImpl implements BookRentRepository {
 
     @Override
     public BookRent takeRent(BookRent bookRent, Long bookId) {
+        // Repeatable так как количество книг может поменяться
         try {
             entityManager.getTransaction().begin();
             entityManager.createNativeQuery("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ").executeUpdate();
@@ -78,6 +79,7 @@ public class BookRentRepositoryImpl implements BookRentRepository {
     }
 
     public BookRent finalRent(UUID id) {
+        // Repeatable так как количество книг может поменяться
         try {
             entityManager.getTransaction().begin();
             entityManager.createNativeQuery("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ").executeUpdate();
