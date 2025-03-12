@@ -1,5 +1,6 @@
 package org.cwt.task.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotNull;
@@ -16,6 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookRentDto {
+    @JsonIgnore
     UUID id;
 
     @NotNull(message = "Дата аренды не может быть пустой")

@@ -1,5 +1,6 @@
 package org.cwt.task.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
@@ -15,6 +16,9 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookDto {
+    @JsonIgnore
+    Long id;
+
     @NotBlank(message = "Название книги не может быть пустым")
     @Size(max = 255, message = "Название книги не должно превышать 255 символов")
     String name;
