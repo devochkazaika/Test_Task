@@ -32,13 +32,11 @@ public class RentServiceImpl implements RentService {
         BookRent rentEntity = new BookRent();
         rentEntity.setRentDate(Objects.requireNonNullElseGet(rentDate, LocalDateTime::now));
         rentEntity.setRentStatus(BookRent.RentStatus.OPENED);
-        rentEntity.setBook(bookService.getById(bookId));
 
         User user = userService.getUser(userId);
         rentEntity.setUser(user);
 
-        bookService.save(rentEntity.getBook());
-        return repository.save(rentEntity);
+        return repository.takeRent(rentEntity);
     }
 
     @Override

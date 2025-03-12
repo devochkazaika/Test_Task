@@ -1,16 +1,21 @@
 package org.cwt.task.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDto {
+    @JsonIgnore
+    UUID id;
 
     @NotBlank(message = "Имя не может быть пустым")
     @Size(max = 255, message = "Имя не должно превышать 255 символов")

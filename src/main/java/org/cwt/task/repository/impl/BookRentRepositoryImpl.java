@@ -4,6 +4,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
+import jakarta.persistence.PersistenceContext;
 import org.cwt.task.exception.NotFoundException;
 import org.cwt.task.model.entity.Book;
 import org.cwt.task.model.entity.BookRent;
@@ -14,6 +15,7 @@ import java.util.UUID;
 
 @Singleton
 public class BookRentRepositoryImpl implements BookRentRepository {
+    @PersistenceContext
     private EntityManager entityManager;
 
     @Inject
@@ -25,7 +27,7 @@ public class BookRentRepositoryImpl implements BookRentRepository {
     public BookRent findById(UUID id) {
         try {
             return entityManager
-                    .createQuery("Select r from BookRent r where r.uuid = :id", BookRent.class)
+                    .createQuery("Select r from BookRent r where r.id = :id", BookRent.class)
                     .setParameter("id", id).getSingleResult();
         }
         catch (NoResultException ex){
@@ -42,12 +44,27 @@ public class BookRentRepositoryImpl implements BookRentRepository {
     public BookRent save(BookRent bookRent) {
         try {
             entityManager.getTransaction().begin();
-            Book book = entityManager.createQuery("select b from Book b where b.id = :bookId", Book.class)
-                    .setParameter("bookId", bookRent.getBook().getId())
-                    .getSingleResult();
-            if (book.getCount() <= 0) throw new IllegalArgumentException("Book is zero count");
+            entityManager.persist(bookRent);
+            entityManager.getTransaction().commit();
+            return bookRent;
+        }
+        catch (Exception e){
+            entityManager.getTransaction().rollback();
+            throw e;
+        }
+    }
+
+    public BookRent takeRent(BookRent bookRent) {
+        try {
+            entityManager.getTransaction().begin();
+            entityManager.createNativeQuery("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ").executeUpdate();
+
+            Book book = entityManager.find(Book.class, bookRent.getBook().getId());
+            if (book.getCount() <= 0) throw new IllegalArgumentException("Book count is 0");
             book.setCount(book.getCount() - 1);
+
             entityManager.persist(book);
+            bookRent.setBook(book);
             entityManager.persist(bookRent);
             entityManager.getTransaction().commit();
             return bookRent;

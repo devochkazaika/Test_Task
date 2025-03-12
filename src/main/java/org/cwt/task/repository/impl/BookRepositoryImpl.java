@@ -4,14 +4,16 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
-import org.cwt.task.model.entity.Book;
+import jakarta.persistence.PersistenceContext;
 import org.cwt.task.exception.NotFoundException;
+import org.cwt.task.model.entity.Book;
 import org.cwt.task.repository.BookRepository;
 
 import java.util.List;
 
 @Singleton
 public class BookRepositoryImpl implements BookRepository {
+    @PersistenceContext
     private EntityManager em;
 
     @Inject
@@ -36,12 +38,11 @@ public class BookRepositoryImpl implements BookRepository {
             em.getTransaction().begin();
             em.persist(book);
             em.getTransaction().commit();
+            return book;
         }
         catch (Exception e){
-            em.getTransaction().rollback();
             throw new RuntimeException("Could not save book", e);
         }
-        return book;
     }
 
     @Override
