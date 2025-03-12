@@ -15,9 +15,9 @@
 
             <property name="jakarta.persistence.schema-generation.database.action" value="update"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
-            <property name="hibernate.show_sql" value="true"/>
+<!--            <property name="hibernate.show_sql" value="true"/>-->
             <property name="hibernate.format_sql" value="true"/>
-            <property name="hibernate.use_sql_comments" value="true"/>
+<!--            <property name="hibernate.use_sql_comments" value="true"/>-->
 
             <!--Пулл соединений Hikari-->
             <property name="hibernate.hikari.minimumIdle" value="5" />

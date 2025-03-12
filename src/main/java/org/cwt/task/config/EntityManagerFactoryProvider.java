@@ -32,9 +32,9 @@ public class EntityManagerFactoryProvider implements Factory<EntityManager> {
 
         properties.put("jakarta.persistence.schema-generation.database.action", "update");
         properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
-        properties.put("hibernate.show_sql", "true");
+//        properties.put("hibernate.show_sql", "true");
         properties.put("hibernate.format_sql", "true");
-        properties.put("hibernate.use_sql_comments", "true");
+//        properties.put("hibernate.use_sql_comments", "true");
 
         // Настройки HikariCP
         properties.put("hibernate.hikari.minimumIdle", "5");
