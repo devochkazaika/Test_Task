@@ -193,6 +193,12 @@
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>4.0.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>3.7.7</version>
             <scope>test</scope>
@@ -210,7 +216,7 @@
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <version>11.0.7</version> <!-- Используйте актуальную версию -->
+                <version>11.0.7</version>
                 <configuration>
                     <webAppConfig>
                         <contextPath>/</contextPath>
@@ -249,7 +255,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
                 <configuration>
-                    <source>11</source> <!-- Рекомендуется использовать более современную версию Java -->
+                    <source>11</source>
                     <target>11</target>
                 </configuration>
             </plugin>

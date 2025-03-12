@@ -4,10 +4,8 @@ import jakarta.inject.Inject;
 import org.cwt.task.model.entity.BookRent;
 import org.cwt.task.model.entity.User;
 import org.cwt.task.repository.BookRentRepository;
-import org.cwt.task.service.BookService;
 import org.cwt.task.service.RentService;
 import org.cwt.task.service.UserService;
-import org.modelmapper.ModelMapper;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,12 +18,6 @@ public class RentServiceImpl implements RentService {
 
     @Inject
     private UserService userService;
-
-    @Inject
-    private BookService bookService;
-
-    @Inject
-    private ModelMapper modelMapper;
 
     @Override
     public BookRent takeRent(LocalDateTime rentDate, Long bookId, UUID userId) {

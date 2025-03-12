@@ -20,7 +20,6 @@ import org.cwt.task.service.impl.BookServiceImpl;
 import org.cwt.task.service.impl.RentServiceImpl;
 import org.cwt.task.service.impl.UserServiceImpl;
 import org.cwt.task.utils.BookMapper;
-import org.cwt.task.utils.EntityManagerFactoryProvider;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.modelmapper.ModelMapper;
 
