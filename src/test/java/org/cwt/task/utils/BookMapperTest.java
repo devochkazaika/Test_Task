@@ -27,9 +27,9 @@ public class BookMapperTest extends TestCase {
         user.setId(UUID.randomUUID());
         user.setFirstName("testName");
         user.setLastName("testLastName");
-        Book book = new Book(1L,"Book Title", "Author Name", LocalDate.now(), Book.BookTheme.FANTASTIC);
+        Book book = new Book(1L,"Book Title", "Author Name", LocalDate.now(), 2, Book.BookTheme.FANTASTIC);
         BookRent bookRent = new BookRent();
-        bookRent.setUuid(UUID.randomUUID());
+        bookRent.setId(UUID.randomUUID());
         bookRent.setRentDate(LocalDateTime.now());
         bookRent.setReturnDate(LocalDateTime.now().plusDays(7));
         bookRent.setUser(user);
@@ -98,7 +98,7 @@ public class BookMapperTest extends TestCase {
         user.setLastName(bookRentDto.getLastName());
         bookRent.setUser(user);
 
-        Book book = new Book(1L, bookRentDto.getBookName(), "Author Name", LocalDate.now(), Book.BookTheme.FANTASTIC);
+        Book book = new Book(1L, bookRentDto.getBookName(), "Author Name", LocalDate.now(), 2, Book.BookTheme.FANTASTIC);
         bookRent.setBook(book);
 
         Assertions.assertAll(

@@ -12,13 +12,14 @@ import org.glassfish.jersey.servlet.ServletContainer;
 
 @ApplicationPath("api")
 public class Main extends ResourceConfig {
-    public static final String BASE_URI = "http://localhost:8080/api/";
+    public static final String BASE_URI = "http://localhost:" + System.getenv("LIBRARY_PORT") + "/api/";
 
     public Main() {
 
         packages("org.cwt.task");
         register(ValidationFeature.class);
         register(new ApplicationBinder()); // CDI
+
     }
 
     public static Server startServer() {
@@ -29,6 +30,7 @@ public class Main extends ResourceConfig {
 
         ServletHolder jerseyServlet = new ServletHolder(new ServletContainer(new Main()));
         context.addServlet(jerseyServlet, "/api/*");
+        jerseyServlet.setInitOrder(1);
 
         server.setHandler(context);
         return server;

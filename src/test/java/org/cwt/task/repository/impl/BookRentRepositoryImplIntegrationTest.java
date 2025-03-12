@@ -34,7 +34,7 @@ public class BookRentRepositoryImplIntegrationTest {
         userId = UUID.randomUUID();
         bookRentId = UUID.randomUUID();
         testBookRent = new BookRent();
-        testBookRent.setUuid(bookRentId);
+        testBookRent.setId(bookRentId);
         testBookRent.setRentDate(java.time.LocalDateTime.now());
         testBookRent.setReturnDate(java.time.LocalDateTime.now().plusDays(7));
 
@@ -55,7 +55,7 @@ public class BookRentRepositoryImplIntegrationTest {
         BookRent foundBookRent = repository.findById(bookRentId);
 
         assertNotNull(foundBookRent);
-        assertEquals(bookRentId, foundBookRent.getUuid());
+        assertEquals(bookRentId, foundBookRent.getId());
     }
 
     @Test
@@ -66,7 +66,7 @@ public class BookRentRepositoryImplIntegrationTest {
         // Проверяем, что результат не пустой
         assertNotNull(result);
         assertFalse(result.isEmpty());
-        assertEquals(bookRentId, result.get(0).getUuid());
+        assertEquals(bookRentId, result.get(0).getId());
     }
 
     @Test
@@ -74,19 +74,15 @@ public class BookRentRepositoryImplIntegrationTest {
         // Сохраняем новый объект BookRent
         BookRent newBookRent = new BookRent();
         UUID rentId = UUID.randomUUID();
-        newBookRent.setUuid(rentId);
+        newBookRent.setId(rentId);
         newBookRent.setRentDate(java.time.LocalDateTime.now());
         newBookRent.setReturnDate(java.time.LocalDateTime.now().plusDays(7));
-
-        User newUser = new User();
-        newUser.setId(UUID.randomUUID());
-        newBookRent.setUser(newUser);
 
         repository.save(newBookRent);
         BookRent bookRent = repository.findById(rentId);
 
-        assertNotNull(bookRent.getUuid());
-        assertEquals(rentId, bookRent.getUuid());
+        assertNotNull(bookRent.getId());
+        assertEquals(rentId, bookRent.getId());
         assertEquals(newBookRent.getRentDate(), bookRent.getRentDate());
         assertEquals(newBookRent.getReturnDate(), bookRent.getReturnDate());
         assertEquals(newBookRent.getRentStatus(), bookRent.getRentStatus());

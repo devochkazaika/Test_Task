@@ -1,9 +1,7 @@
 package org.cwt.task.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
@@ -13,6 +11,8 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class BookRent {
     @Id
     UUID id = UUID.randomUUID();

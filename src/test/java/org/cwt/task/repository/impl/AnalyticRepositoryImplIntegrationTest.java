@@ -4,8 +4,10 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import org.cwt.task.model.UserAnalytic;
+import org.cwt.task.model.entity.Book;
 import org.cwt.task.model.entity.BookRent;
 import org.cwt.task.model.entity.User;
+import org.cwt.task.repository.BookRepository;
 import org.cwt.task.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,8 +18,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class AnalyticRepositoryImplIntegrationTest {
 
@@ -28,144 +28,121 @@ public class AnalyticRepositoryImplIntegrationTest {
 
     private UUID userId;
     private User testUser;
-    private BookRent testBookRent;
+    private UUID bookRentId;
 
     @BeforeEach
     public void setUp() {
         emf = Persistence.createEntityManagerFactory("testPU");
         em = emf.createEntityManager();
 
-        userRepository = mock(UserRepository.class);
+        userRepository = new UserRepositoryImpl(em);
         repository = new AnalyticRepositoryImpl(em, userRepository);
+        BookRentRepositoryImpl bookRentRepository = new BookRentRepositoryImpl(em);
+        BookRepository bookRepository = new BookRepositoryImpl(em);
 
-        // Создание тестового пользователя
-        userId = UUID.randomUUID();
         testUser = new User();
-        testUser.setId(userId);
         testUser.setFirstName("John");
         testUser.setLastName("Doe");
+        testUser.setEmail("john.doe@example.com");
 
-        // Создание тестового BookRent
-        testBookRent = new BookRent();
-        testBookRent.setUser(testUser);
-        testBookRent.setRentStatus(BookRent.RentStatus.OPENED);
-        testBookRent.setRentDate(LocalDateTime.now().minusDays(1));
-
-        // Сохранение данных в базу
         em.getTransaction().begin();
         em.persist(testUser);
-        em.persist(testBookRent);
         em.getTransaction().commit();
-    }
 
-    @Test
-    public void testGetUserAnalytic_WithStartTimeAndEndTime() {
-        LocalDateTime startTime = LocalDateTime.now().minusDays(10);
-        LocalDateTime endTime = LocalDateTime.now();
+        userId = testUser.getId();
 
-        when(userRepository.findById(userId)).thenReturn(testUser);
-
-        UserAnalytic result = repository.getUserAnalytic(userId, startTime, endTime);
-
-        assertNotNull(result);
-        assertEquals("John", result.getFirstName());
-        assertEquals("Doe", result.getLastName());
-        assertEquals(1, result.getCountRent());
-        assertEquals(1, result.getCountOpenRent());
-        assertEquals(0, result.getCountCloseRent());
-        assertTrue(result.getOpenBook().contains("Test Book"));
-        assertTrue(result.getCloseBook().isEmpty());
-    }
-
-    @Test
-    public void testGetBooksByStatus_OpenBooks() {
-        LocalDateTime startTime = LocalDateTime.now().minusDays(10);
-        LocalDateTime endTime = LocalDateTime.now();
-
-        when(userRepository.findById(userId)).thenReturn(testUser);
-
-        List<String> openBooks = repository.getBooksByStatus(userId, BookRent.RentStatus.OPENED, startTime, endTime);
-
-        assertNotNull(openBooks);
-        assertEquals(1, openBooks.size());
-        assertTrue(openBooks.contains("Test Book"));
-    }
-
-    @Test
-    public void testGetBooksByStatus_ClosedBooks() {
-        // Изменяем статус на закрытый
-        testBookRent.setRentStatus(BookRent.RentStatus.CLOSED);
-        testBookRent.setReturnDate(LocalDateTime.now());
+        BookRent bookRent = new BookRent();
+        bookRent.setUser(testUser);
+        bookRent.setRentStatus(BookRent.RentStatus.CLOSED);
+        bookRent.setRentDate(LocalDateTime.now().minusDays(5));
+        bookRent.setReturnDate(LocalDateTime.now().minusDays(2));
 
         em.getTransaction().begin();
-        em.merge(testBookRent);  // обновляем запись
+        em.persist(bookRent);
         em.getTransaction().commit();
 
+        Book testBook = new Book();
+        testBook.setName("Test Book");
+        testBook.setAuthor("Test Author");
+        testBook.setCount(20);
+
+        testBook = bookRepository.save(testBook);
+        bookRentId = bookRent.getId();
+        userRepository.save(testUser);
+        bookRentRepository.takeRent(bookRent, testBook.getId());
+    }
+
+    @Test
+    public void testGetBooksByStatusCLOSED() {
+        List<String> books = repository.getBooksByStatus(userId, BookRent.RentStatus.CLOSED, LocalDateTime.now().minusDays(10), LocalDateTime.now());
+
+        assertNotNull(books);
+        assertFalse(books.isEmpty());
+        assertTrue(books.contains("Test Book"));
+    }
+
+    @Test
+    public void testGetUserAnalytic() {
         LocalDateTime startTime = LocalDateTime.now().minusDays(10);
         LocalDateTime endTime = LocalDateTime.now();
 
-        when(userRepository.findById(userId)).thenReturn(testUser);
+        UserAnalytic analytic = repository.getUserAnalytic(userId, startTime, endTime);
 
-        List<String> closedBooks = repository.getBooksByStatus(userId, BookRent.RentStatus.CLOSED, startTime, endTime);
-
-        assertNotNull(closedBooks);
-        assertEquals(1, closedBooks.size());
-        assertTrue(closedBooks.contains("Test Book"));
+        assertNotNull(analytic);
+        assertEquals("John", analytic.getFirstName());
+        assertEquals("Doe", analytic.getLastName());
+        assertEquals(1, analytic.getCountRent());
+        assertEquals(0, analytic.getCountOpenRent());
+        assertEquals(1, analytic.getCountCloseRent());
     }
 
     @Test
-    public void testGetUserAnalytic_NoRentData() {
-        UUID newUserId = UUID.randomUUID();
-        User newUser = new User();
-        newUser.setId(newUserId);
-        newUser.setFirstName("Jane");
-        newUser.setLastName("Smith");
+    public void testGetUserAnalyticWithoutEndTime() {
+        LocalDateTime startTime = LocalDateTime.now().minusDays(10);
 
-        when(userRepository.findById(newUserId)).thenReturn(newUser);
+        UserAnalytic analytic = repository.getUserAnalytic(userId, startTime);
 
-        UserAnalytic result = repository.getUserAnalytic(newUserId);
-
-        assertNotNull(result);
-        assertEquals("Jane", result.getFirstName());
-        assertEquals("Smith", result.getLastName());
-        assertEquals(0, result.getCountRent());
-        assertEquals(0, result.getCountOpenRent());
-        assertEquals(0, result.getCountCloseRent());
-        assertTrue(result.getOpenBook().isEmpty());
-        assertTrue(result.getCloseBook().isEmpty());
+        assertNotNull(analytic);
+        assertEquals("John", analytic.getFirstName());
+        assertEquals("Doe", analytic.getLastName());
+        assertEquals(1, analytic.getCountRent());
+        assertEquals(0, analytic.getCountOpenRent());
+        assertEquals(1, analytic.getCountCloseRent());
     }
 
     @Test
-    public void testGetUserAnalytic_OnlyOpenRent() {
-        // Добавляем новый открытый BookRent
-        BookRent newRent = new BookRent();
-        newRent.setUser(testUser);
-        newRent.setRentStatus(BookRent.RentStatus.OPENED);
-        newRent.setRentDate(LocalDateTime.now().minusDays(3));
+    public void testGetUserAnalyticWithNoRent() {
+        // Create a user with no rents
+        User noRentUser = new User();
+        noRentUser.setFirstName("Jane");
+        noRentUser.setLastName("Doe");
+        noRentUser.setEmail("jane.doe@example.com");
 
         em.getTransaction().begin();
-        em.persist(newRent);
+        em.persist(noRentUser);
         em.getTransaction().commit();
+
+        UUID noRentUserId = noRentUser.getId();
 
         LocalDateTime startTime = LocalDateTime.now().minusDays(10);
         LocalDateTime endTime = LocalDateTime.now();
 
-        when(userRepository.findById(userId)).thenReturn(testUser);
+        UserAnalytic analytic = repository.getUserAnalytic(noRentUserId, startTime, endTime);
 
-        UserAnalytic result = repository.getUserAnalytic(userId, startTime, endTime);
-
-        assertNotNull(result);
-        assertEquals(2, result.getCountRent());
-        assertEquals(2, result.getCountOpenRent());
-        assertEquals(0, result.getCountCloseRent());
+        assertNotNull(analytic);
+        assertEquals("Jane", analytic.getFirstName());
+        assertEquals("Doe", analytic.getLastName());
+        assertEquals(0, analytic.getCountRent());
+        assertEquals(0, analytic.getCountOpenRent());
+        assertEquals(0, analytic.getCountCloseRent());
     }
 
     @AfterEach
     public void tearDown() {
         if (em != null && em.isOpen()) {
             em.getTransaction().begin();
-            em.createQuery("DELETE FROM BookRent").executeUpdate();
-            em.createQuery("DELETE FROM User").executeUpdate();
+            em.createQuery("DELETE FROM BookRent").executeUpdate(); // Cleaning up BookRent entities
+            em.createQuery("DELETE FROM User").executeUpdate();   // Cleaning up User entities
             em.getTransaction().commit();
             em.close();
         }

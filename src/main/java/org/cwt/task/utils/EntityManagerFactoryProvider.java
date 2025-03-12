@@ -1,5 +1,6 @@
 package org.cwt.task.utils;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.inject.Singleton;
 import jakarta.persistence.EntityManager;
@@ -15,6 +16,12 @@ import java.util.Map;
 public class EntityManagerFactoryProvider implements Factory<EntityManager> {
 
     private final EntityManagerFactory emf;
+
+    @PostConstruct
+    public void init() {
+        EntityManager em = provide();
+        em.close();
+    }
 
     public EntityManagerFactoryProvider() {
         Map<String, String> properties = new HashMap<>();
@@ -34,6 +41,7 @@ public class EntityManagerFactoryProvider implements Factory<EntityManager> {
         properties.put("hibernate.hikari.maximumPoolSize", "10");
         properties.put("hibernate.hikari.idleTimeout", "30000");
         properties.put("hibernate.connection.provider_class", "org.hibernate.hikaricp.internal.HikariCPConnectionProvider");
+
 
         this.emf = Persistence.createEntityManagerFactory("library", properties);
     }
