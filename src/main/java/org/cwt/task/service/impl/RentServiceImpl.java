@@ -43,6 +43,9 @@ public class RentServiceImpl implements RentService {
 
     @Override
     public List<BookRent> getRentList(UUID userId) {
+        // Для проверки существует ли user
+        userService.getUser(userId);
+
         return repository.findByUserId(userId);
     }
 }

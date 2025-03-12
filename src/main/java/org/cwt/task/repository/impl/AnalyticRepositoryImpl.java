@@ -40,10 +40,11 @@ public class AnalyticRepositoryImpl implements AnalyticRepository {
         }
 
         LocalDateTime safeEndTime = (endTime != null) ? endTime : LocalDateTime.of(3000, 12, 31, 23, 59, 59);
+        LocalDateTime safeStartTime = (startTime != null) ? startTime : LocalDateTime.of(1000, 12, 31, 23, 59, 59);
 
         Query query = em.createQuery(queryBuilder.toString(), String.class)
                 .setParameter("userId", userId)
-                .setParameter("startTime", startTime)
+                .setParameter("startTime", safeStartTime)
                 .setParameter("endTime", safeEndTime);
         return query.getResultList();
     }
@@ -65,7 +66,8 @@ public class AnalyticRepositoryImpl implements AnalyticRepository {
 
         Query query = em.createQuery(queryBuilder.toString())
                 .setParameter("userId", userId)
-                .setParameter("startTime", startTime)
+                .setParameter("startTime", (startTime != null) ?
+                        startTime : LocalDateTime.of(1000, 12, 31, 23, 59, 59))
                 .setParameter("endTime", endTime != null ?
                         endTime : LocalDateTime.of(3000, 12, 31, 23, 59, 59)); // если endTime = null, ставим LocalDateTime.MAX
 
@@ -87,7 +89,7 @@ public class AnalyticRepositoryImpl implements AnalyticRepository {
         return UserAnalytic.builder()
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
-                .countRent(countRent)
+                .countRent(countOpenRent + countCloseRent)
                 .countOpenRent(countOpenRent)
                 .countCloseRent(countCloseRent)
                 .openBook(openBooks)

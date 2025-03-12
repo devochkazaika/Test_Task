@@ -62,7 +62,13 @@ public class BookRentRepositoryImpl implements BookRentRepository {
             entityManager.getTransaction().begin();
             entityManager.createNativeQuery("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ").executeUpdate();
 
-            Book book = entityManager.find(Book.class, bookId);
+            Book book;
+            try {
+                 book = entityManager.find(Book.class, bookId);
+            }
+            catch (NoResultException ex){
+                throw new NotFoundException("Book not found with book id = " + bookId);
+            }
             if (book.getCount() <= 0) throw new IllegalArgumentException("Book count is 0");
             book.setCount(book.getCount() - 1);
 

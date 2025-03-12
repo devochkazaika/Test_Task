@@ -47,12 +47,12 @@ public class RentResources {
     }
 
     @GET
-    @Path("user")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("user/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<BookRentDto> userRents(@QueryParam("userId") UUID id) {
-        return rentService.getRentList(id).stream().map(
-                x -> modelMapper.map(x, BookRentDto.class))
+    public List<BookRentDto> userRents(@PathParam("userId") UUID id) {
+        return rentService.getRentList(id)
+                .stream()
+                .map(x -> modelMapper.map(x, BookRentDto.class))
                 .collect(Collectors.toList());
     }
 }
