@@ -23,8 +23,10 @@ public class UserResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public User createUser(UserDto user) {
-        return userService.addUser(modelMapper.map(user, User.class));
+    public UserDto createUser(UserDto user) {
+        return modelMapper.map(
+                userService.addUser(modelMapper.map(user, User.class))
+        , UserDto.class);
     }
 
     @GET
@@ -40,8 +42,8 @@ public class UserResource {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public User getUser(@PathParam("id") UUID id) {
-        return userService.getUser(id);
+    public UserDto getUser(@PathParam("id") UUID id) {
+        return modelMapper.map(userService.getUser(id), UserDto.class);
     }
 
     @Path("{id}")
