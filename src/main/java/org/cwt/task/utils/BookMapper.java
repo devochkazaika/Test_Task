@@ -17,6 +17,7 @@ public class BookMapper extends ModelMapper {
                 map(source.getUser().getFirstName(), destination.getFirstName());
                 map(source.getUser().getLastName(), destination.getLastName());
                 map(source.getBook().getName(), destination.getBookName());
+                map(source.getUser().getId(), destination.getUserId());
             }
         });
     }

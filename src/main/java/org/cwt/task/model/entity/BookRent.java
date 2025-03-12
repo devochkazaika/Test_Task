@@ -15,7 +15,7 @@ import java.util.UUID;
 @Setter
 public class BookRent {
     @Id
-    UUID uuid = UUID.randomUUID();
+    UUID id = UUID.randomUUID();
 
     LocalDateTime rentDate;
 
@@ -36,4 +36,6 @@ public class BookRent {
         OPENED,
         CLOSED
     }
+
+
 }

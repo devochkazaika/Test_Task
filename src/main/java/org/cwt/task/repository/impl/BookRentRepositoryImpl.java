@@ -5,6 +5,7 @@ import jakarta.inject.Singleton;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import org.cwt.task.exception.NotFoundException;
+import org.cwt.task.model.entity.Book;
 import org.cwt.task.model.entity.BookRent;
 import org.cwt.task.repository.BookRentRepository;
 
@@ -39,10 +40,22 @@ public class BookRentRepositoryImpl implements BookRentRepository {
 
     @Override
     public BookRent save(BookRent bookRent) {
-        entityManager.getTransaction().begin();
-        entityManager.persist(bookRent);
-        entityManager.getTransaction().commit();
-        return bookRent;
+        try {
+            entityManager.getTransaction().begin();
+            Book book = entityManager.createQuery("select b from Book b where b.id = :bookId", Book.class)
+                    .setParameter("bookId", bookRent.getBook().getId())
+                    .getSingleResult();
+            if (book.getCount() <= 0) throw new IllegalArgumentException("Book is zero count");
+            book.setCount(book.getCount() - 1);
+            entityManager.persist(book);
+            entityManager.persist(bookRent);
+            entityManager.getTransaction().commit();
+            return bookRent;
+        }
+        catch (Exception e){
+            entityManager.getTransaction().rollback();
+            throw e;
+        }
     }
 
     @Override

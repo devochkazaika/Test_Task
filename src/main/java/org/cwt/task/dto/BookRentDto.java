@@ -2,7 +2,6 @@ package org.cwt.task.dto;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -17,7 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookRentDto {
-    UUID uuid;
+    UUID id;
 
     @NotNull(message = "Дата аренды не может быть пустой")
     LocalDateTime rentDate;
@@ -33,4 +32,5 @@ public class BookRentDto {
     String firstName;
     String lastName;
 
+    UUID userId;
 }

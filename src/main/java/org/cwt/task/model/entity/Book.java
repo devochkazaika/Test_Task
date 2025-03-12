@@ -2,6 +2,7 @@ package org.cwt.task.model.entity;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -24,6 +25,9 @@ public class Book {
     String author;
 
     LocalDate publicationDate;
+
+    @Min(value = 0, message = "Количество книг не может быть отрицательным")
+    Integer count;
 
     @Enumerated(EnumType.STRING)
     BookTheme bookTheme;

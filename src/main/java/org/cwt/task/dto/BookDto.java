@@ -2,10 +2,7 @@ package org.cwt.task.dto;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.cwt.task.model.entity.Book;
@@ -33,4 +30,7 @@ public class BookDto {
     @NotNull(message = "Тема книги обязательна")
     @Enumerated(EnumType.STRING)
     Book.BookTheme bookTheme;
+
+    @Min(value = 0, message = "Количество книг не может быть отрицательным")
+    Integer count;
 }

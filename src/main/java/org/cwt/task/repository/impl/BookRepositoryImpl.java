@@ -38,6 +38,7 @@ public class BookRepositoryImpl implements BookRepository {
             em.getTransaction().commit();
         }
         catch (Exception e){
+            em.getTransaction().rollback();
             throw new RuntimeException("Could not save book", e);
         }
         return book;
