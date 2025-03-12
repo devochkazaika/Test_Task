@@ -14,5 +14,7 @@ public interface BookRentRepository {
 
     List<BookRent> findByUserId(UUID userId);
 
-    BookRent takeRent(BookRent bookRent);
+    BookRent takeRent(BookRent bookRent, Long bookId);
+
+    BookRent finalRent(UUID bookRent);
 }

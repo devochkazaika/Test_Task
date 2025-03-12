@@ -36,19 +36,12 @@ public class RentServiceImpl implements RentService {
         User user = userService.getUser(userId);
         rentEntity.setUser(user);
 
-        return repository.takeRent(rentEntity);
+        return repository.takeRent(rentEntity, bookId);
     }
 
     @Override
     public void returnRent(UUID id) {
-        BookRent bookRent = repository.findById(id);
-
-        bookRent.setReturnDate(LocalDateTime.now());
-        bookRent.setRentStatus(BookRent.RentStatus.CLOSED);
-        bookRent.getBook().setCount(bookRent.getBook().getCount() + 1);
-
-        bookService.save(bookRent.getBook());
-        repository.save(bookRent);
+        repository.finalRent(id);
     }
 
     @Override
