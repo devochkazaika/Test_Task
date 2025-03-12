@@ -8,7 +8,6 @@ services:
       POSTGRES_USER: "user"
       POSTGRES_PASSWORD: "password"
     volumes:
-      - ./data:/var/lib/postgresql/data
       - ./backup:/docker-entrypoint-initdb.d  # Папка для автоматического импорта
     ports:
       - "5432:5432"
