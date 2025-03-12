@@ -30,6 +30,9 @@ public class Book {
 
     public enum BookTheme {
         CLASSIC,
-        FANTASTIC
+        FANTASTIC,
+        EPIC,
+        DRAMA,
+        DETECTIVE
     }
 }

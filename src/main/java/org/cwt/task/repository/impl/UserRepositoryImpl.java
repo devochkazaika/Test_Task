@@ -13,14 +13,23 @@ import java.util.UUID;
 
 @Singleton
 public class UserRepositoryImpl implements UserRepository {
-    @Inject
     private EntityManager em;
+
+    @Inject
+    public UserRepositoryImpl(EntityManager entityManager) {
+        this.em = entityManager;
+    }
 
     @Override
     public User findByUsername(String username) {
-        return em.createQuery("select u from User u " +
-                "where u.firstName = :username", User.class).setParameter("username", username)
-                .getSingleResult();
+        try {
+            return em.createQuery("select u from User u " +
+                            "where u.firstName = :username", User.class).setParameter("username", username)
+                    .getSingleResult();
+        }
+        catch (NoResultException ex){
+            throw new NotFoundException("Not found user with username: " + username);
+        }
     }
 
     @Override

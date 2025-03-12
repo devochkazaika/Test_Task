@@ -4,13 +4,15 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import org.cwt.task.dto.BookRentDto;
-import org.cwt.task.model.entity.BookRent;
 import org.cwt.task.service.RentService;
 import org.modelmapper.ModelMapper;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static org.cwt.task.utils.DateConverter.parseDate;
 
 @Path("/rent")
 public class RentResources {
@@ -31,11 +33,12 @@ public class RentResources {
     }
 
     @POST
-    public BookRent createRent(BookRentDto bookRent,
+    public BookRentDto createRent(@QueryParam("rentDate") String rentDate,
                              @QueryParam("bookId") Long bookId,
                              @QueryParam("userId") UUID userId) {
-        return rentService.takeRent(bookRent, bookId, userId);
-    };
+        LocalDateTime rent = parseDate(rentDate);
+        return modelMapper.map(rentService.takeRent(rent, bookId, userId), BookRentDto.class);
+    }
 
     @PUT
     @Path("{id}")

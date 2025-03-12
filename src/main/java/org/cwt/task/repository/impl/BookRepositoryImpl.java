@@ -12,8 +12,12 @@ import java.util.List;
 
 @Singleton
 public class BookRepositoryImpl implements BookRepository {
-    @Inject
     private EntityManager em;
+
+    @Inject
+    public BookRepositoryImpl(EntityManager entityManager) {
+        this.em = entityManager;
+    }
 
     @Override
     public Book findById(Long id) {
@@ -28,9 +32,14 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public Book save(Book book) {
-        em.getTransaction().begin();
-        em.persist(book);
-        em.getTransaction().commit();
+        try {
+            em.getTransaction().begin();
+            em.persist(book);
+            em.getTransaction().commit();
+        }
+        catch (Exception e){
+            throw new RuntimeException("Could not save book", e);
+        }
         return book;
     }
 

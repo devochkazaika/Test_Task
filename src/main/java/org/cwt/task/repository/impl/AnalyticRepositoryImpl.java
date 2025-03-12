@@ -3,7 +3,7 @@ package org.cwt.task.repository.impl;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.NoResultException;
+import jakarta.persistence.Query;
 import org.cwt.task.model.UserAnalytic;
 import org.cwt.task.model.entity.BookRent;
 import org.cwt.task.model.entity.User;
@@ -16,85 +16,95 @@ import java.util.UUID;
 
 @Singleton
 public class AnalyticRepositoryImpl implements AnalyticRepository {
-    @Inject
-    private EntityManager em;
+    private final EntityManager em;
+    private final UserRepository userRepository;
 
     @Inject
-    private UserRepository userRepository;
+    public AnalyticRepositoryImpl(EntityManager entityManager, UserRepository userRepository) {
+        this.em = entityManager;
+        this.userRepository = userRepository;
+    }
 
-    private List<String> getBooksByStatus(UUID userId,
-                                         BookRent.RentStatus status,
-                                         LocalDateTime startTime, 
-                                         LocalDateTime endTime) {
-        StringBuilder stringBuilder = new StringBuilder();
-        String query = "SELECT DISTINCT b.name FROM BookRent r " +
-                "JOIN r.book b " +
-                "WHERE r.user.id = :userId AND r.rentStatus = :status";
-        stringBuilder.append(query);
-        if (startTime != null) {
-            stringBuilder.append(" AND (r.rentDate >= :startTime)");
+    public List<String> getBooksByStatus(UUID userId, BookRent.RentStatus status, LocalDateTime startTime, LocalDateTime endTime) {
+        StringBuilder queryBuilder = new StringBuilder("SELECT DISTINCT b.name FROM BookRent r " +
+                "JOIN r.book b WHERE r.user.id = :userId AND r.rentStatus = :status");
+
+        if (startTime != null && status.equals(BookRent.RentStatus.OPENED)) {
+            queryBuilder.append(" AND r.rentDate >= :startTime");
         }
-        if (endTime != null) {
-            stringBuilder.append(" AND (r.returnDate <= :endTime)");
+        if (endTime != null && status.equals(BookRent.RentStatus.CLOSED)) {
+            queryBuilder.append(" AND r.returnDate <= :endTime");
         }
 
-        return em.createQuery(stringBuilder.toString(), String.class)
+        Query query = em.createQuery(queryBuilder.toString(), String.class)
                 .setParameter("userId", userId)
-                .setParameter("status", status)
-                .setParameter("startTime", startTime)
-                .setParameter("endTime", endTime)
-                .getResultList();
+                .setParameter("status", status);
+
+        if (startTime != null && status.equals(BookRent.RentStatus.OPENED)) {
+            query.setParameter("startTime", startTime);
+        }
+        if (endTime != null && status.equals(BookRent.RentStatus.CLOSED)) {
+            query.setParameter("endTime", endTime);
+        }
+
+        return query.getResultList();
     }
 
     @Override
     public UserAnalytic getUserAnalytic(UUID userId, LocalDateTime startTime, LocalDateTime endTime) {
-        StringBuilder stringBuilder = new StringBuilder();
-        String query = "SELECT " +
+        StringBuilder queryBuilder = new StringBuilder("SELECT " +
                 "COUNT(r), " +
                 "SUM(CASE WHEN r.rentStatus = 'OPENED' THEN 1 ELSE 0 END), " +
                 "SUM(CASE WHEN r.rentStatus = 'CLOSED' THEN 1 ELSE 0 END) " +
                 "FROM User u " +
                 "LEFT JOIN BookRent r ON u.id = r.user.id " +
-                "WHERE u.id = :userId";
-        stringBuilder.append(query);
+                "WHERE u.id = :userId");
+
         if (startTime != null) {
-            stringBuilder.append(" AND (r.rentDate >= :startTime)");
+            queryBuilder.append(" AND r.rentDate >= :startTime");
         }
         if (endTime != null) {
-            stringBuilder.append(" AND (r.returnDate <= :endTime)");
+            queryBuilder.append(" AND r.returnDate <= :endTime");
         }
-        stringBuilder.append(" GROUP BY u.id");
+
+        queryBuilder.append(" GROUP BY u.id");
 
         User user = userRepository.findById(userId);
-        try {
-            Object[] result = (Object[]) em.createQuery(stringBuilder.toString())
-                    .setParameter("userId", userId)
-                    .setParameter("startTime", startTime)
-                    .setParameter("endTime", endTime)
-                    .getSingleResult();
-            return UserAnalytic.builder()
-                    .firstName(user.getFirstName())
-                    .lastName(user.getLastName())
-                    .countRent(((Number) result[0]).intValue())
-                    .countOpenRent(((Number) result[1]).intValue())
-                    .countCloseRent(((Number) result[2]).intValue())
-                    .openBook(getBooksByStatus(userId, BookRent.RentStatus.OPENED, startTime, endTime))
-                    .closeBook(getBooksByStatus(userId, BookRent.RentStatus.CLOSED, startTime, endTime))
-                    .build();
+
+        Query query = em.createQuery(queryBuilder.toString())
+                .setParameter("userId", userId);
+
+        if (startTime != null) {
+            query.setParameter("startTime", startTime);
         }
-        catch (NoResultException e){
-            return UserAnalytic.builder()
-                    .firstName(user.getFirstName())
-                    .lastName(user.getLastName())
-                    .countRent(0)
-                    .countOpenRent(0)
-                    .countCloseRent(0)
-                    .openBook(getBooksByStatus(userId, BookRent.RentStatus.OPENED, startTime, endTime))
-                    .closeBook(getBooksByStatus(userId, BookRent.RentStatus.CLOSED, startTime, endTime))
-                    .build();
+        if (endTime != null) {
+            query.setParameter("endTime", endTime);
         }
+
+        List<Object[]> resultList = query.getResultList();
+        Object[] result = resultList.isEmpty() ? null : resultList.get(0);
+
+        return buildUserAnalytic(user, result, userId, startTime, endTime);
     }
 
+    private UserAnalytic buildUserAnalytic(User user, Object[] result, UUID userId, LocalDateTime startTime, LocalDateTime endTime) {
+        int countRent = (result != null && result[0] != null) ? ((Number) result[0]).intValue() : 0;
+        int countOpenRent = (result != null && result[1] != null) ? ((Number) result[1]).intValue() : 0;
+        int countCloseRent = (result != null && result[2] != null) ? ((Number) result[2]).intValue() : 0;
+
+        List<String> openBooks = getBooksByStatus(userId, BookRent.RentStatus.OPENED, startTime, endTime);
+        List<String> closeBooks = getBooksByStatus(userId, BookRent.RentStatus.CLOSED, startTime, endTime);
+
+        return UserAnalytic.builder()
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .countRent(countRent)
+                .countOpenRent(countOpenRent)
+                .countCloseRent(countCloseRent)
+                .openBook(openBooks)
+                .closeBook(closeBooks)
+                .build();
+    }
 
     @Override
     public UserAnalytic getUserAnalytic(UUID userId, LocalDateTime startTime) {

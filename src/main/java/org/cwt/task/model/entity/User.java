@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -22,4 +23,10 @@ public class User {
     String lastName;
 
     Byte age;
+
+    @Column(unique = true)
+    String email;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<BookRent> bookRents;
 }

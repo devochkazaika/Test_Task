@@ -24,4 +24,7 @@ public class UserDto {
     @Min(value = 0, message = "Возраст должен быть не меньше 0")
     @Max(value = 120, message = "Возраст не может превышать 120 лет")
     Byte age;
+
+    @Email(message = "Некорректный формат электронной почты")
+    String email;
 }

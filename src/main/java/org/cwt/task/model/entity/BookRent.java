@@ -1,6 +1,5 @@
 package org.cwt.task.model.entity;
 
-
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

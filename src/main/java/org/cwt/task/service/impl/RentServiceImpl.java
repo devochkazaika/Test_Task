@@ -1,7 +1,6 @@
 package org.cwt.task.service.impl;
 
 import jakarta.inject.Inject;
-import org.cwt.task.dto.BookRentDto;
 import org.cwt.task.model.entity.BookRent;
 import org.cwt.task.model.entity.User;
 import org.cwt.task.repository.BookRentRepository;
@@ -12,6 +11,7 @@ import org.modelmapper.ModelMapper;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class RentServiceImpl implements RentService {
@@ -28,8 +28,9 @@ public class RentServiceImpl implements RentService {
     private ModelMapper modelMapper;
 
     @Override
-    public BookRent takeRent(BookRentDto rent, Long bookId, UUID userId) {
-        BookRent rentEntity = modelMapper.map(rent, BookRent.class);
+    public BookRent takeRent(LocalDateTime rentDate, Long bookId, UUID userId) {
+        BookRent rentEntity = new BookRent();
+        rentEntity.setRentDate(Objects.requireNonNullElseGet(rentDate, LocalDateTime::now));
         rentEntity.setRentStatus(BookRent.RentStatus.OPENED);
         rentEntity.setBook(bookService.getById(bookId));
 
