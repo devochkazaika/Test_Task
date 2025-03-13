@@ -23,7 +23,7 @@ public class Main extends ResourceConfig {
     }
 
     public static Server startServer() {
-        Server server = new Server(8080);
+        Server server = new Server(Integer.parseInt(System.getenv("LIBRARY_PORT")));
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
         context.setContextPath("/");
