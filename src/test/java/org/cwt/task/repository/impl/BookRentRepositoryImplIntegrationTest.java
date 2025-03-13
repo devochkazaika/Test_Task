@@ -71,7 +71,6 @@ public class BookRentRepositoryImplIntegrationTest {
 
     @Test
     public void testSave() {
-        // Сохраняем новый объект BookRent
         BookRent newBookRent = new BookRent();
         UUID rentId = UUID.randomUUID();
         newBookRent.setId(rentId);

@@ -112,7 +112,6 @@ public class AnalyticRepositoryImplIntegrationTest {
 
     @Test
     public void testGetUserAnalyticWithNoRent() {
-        // Create a user with no rents
         User noRentUser = new User();
         noRentUser.setFirstName("Jane");
         noRentUser.setLastName("Doe");
