@@ -3,9 +3,7 @@
 <h2>2 вариант</h2>
 <h3>Запуск проекта</h3>
 <h4> Запускается бек и postges (в бд уже есть часть записей) </h4>
-
-docker compose up
-
+<code>docker compose up</code>
 
 <h4> Зависимости </h4>
 <table>
